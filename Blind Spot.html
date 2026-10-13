@@ -1,0 +1,592 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Blind Spot</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a viewfinder. One dark stage, one wide column, hairline-divided sections.
+   Boldness lives in the hero headline and its amber dot (the blind spot); everything else stays quiet. */
+:root{
+  --ink:#0a0b0e;
+  --stage:#101216;
+  --panel:#161920;
+  --line:rgba(236,233,225,.14);
+  --line-strong:rgba(236,233,225,.32);
+  --text:#ece9e1;
+  --dim:#9aa0ab;
+  --tungsten:#f0a52b;
+  --tungsten-ink:#1b1204;
+  --alert:#ff8e6e;
+  --veil:rgba(10,11,14,.86);
+  --display:"Anybody","Arial Narrow",Impact,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gut:clamp(16px,4vw,40px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+body{margin:0;background:var(--ink);color:var(--text);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--tungsten);outline-offset:3px}
+.wrap{width:min(100%,1240px);margin-inline:auto;padding-inline:var(--gut)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--veil);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.1rem 1.5rem;padding-block:.8rem}
+.mark{display:inline-flex;align-items:center;gap:.5rem;font:800 1.1rem/1 var(--display);font-variation-settings:"wdth" 125;letter-spacing:.04em;text-transform:uppercase;text-decoration:none}
+.mark i{display:inline-block;width:.55em;height:.55em;border-radius:50%;background:var(--tungsten)}
+.top nav{display:flex;flex-wrap:wrap;gap:0 1.5rem}
+.top nav a{padding:.55rem 0;font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none}
+.top nav a:hover{color:var(--text)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);padding-block:clamp(1.25rem,3vw,2rem) clamp(3rem,7vw,5.5rem)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(45% 70% at 88% 10%,rgba(240,165,43,.17),transparent 70%),radial-gradient(55% 60% at 0% 100%,rgba(80,120,135,.15),transparent 70%)}
+.corner{position:absolute;width:22px;height:22px;border:2px solid var(--line-strong);pointer-events:none}
+.corner.tl{top:12px;left:12px;border-right:0;border-bottom:0}
+.corner.tr{top:12px;right:12px;border-left:0;border-bottom:0}
+.corner.bl{bottom:12px;left:12px;border-right:0;border-top:0}
+.corner.br{bottom:12px;right:12px;border-left:0;border-top:0}
+.vf-bar{position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 1.5rem;padding-top:2rem;font:400 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.rec{display:inline-flex;align-items:center;gap:.6rem}
+.rec i{display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--tungsten);animation:rec 1.4s steps(1) infinite}
+.rec b{font-weight:500;color:var(--text);font-variant-numeric:tabular-nums}
+@keyframes rec{50%{opacity:.2}}
+.hero h1{position:relative;margin:clamp(2.5rem,6vw,4.5rem) 0 0;font:800 clamp(2.5rem,10.5vw,6.5rem)/.9 var(--display);font-variation-settings:"wdth" 118;letter-spacing:-.01em;text-transform:uppercase}
+.hero h1 span{display:block}
+.hero h1 .dot{display:inline-block;width:.6em;height:.6em;margin-left:.07em;border-radius:50%;background:var(--tungsten);vertical-align:baseline}
+.hero-foot{position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:2.25rem 3rem;margin-top:clamp(1.75rem,4vw,3rem)}
+.hero-copy{flex:1 1 20rem;max-width:34rem;min-width:0}
+.hero-copy p{margin:0;font-size:1.1rem;color:var(--text)}
+.btns{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
+.btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.3rem;border:1px solid var(--line-strong);background:transparent;color:var(--text);font:500 .76rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{border-color:var(--text)}
+.btn.primary{background:var(--tungsten);border-color:var(--tungsten);color:var(--tungsten-ink);font-weight:500}
+.btn.primary:hover{background:var(--text);border-color:var(--text)}
+.test{flex:0 1 17rem;margin:0;min-width:0}
+.test-stage{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.5rem;border:1px solid var(--line);background:var(--stage)}
+.test .plus{font:300 1.7rem/1 var(--mono);color:var(--text)}
+.test .spot{width:14px;height:14px;border-radius:50%;background:var(--tungsten)}
+.test figcaption{margin-top:.7rem;font:400 .72rem/1.5 var(--mono);letter-spacing:.04em;color:var(--dim)}
+.test figcaption b{display:block;color:var(--text);font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.15rem}
+
+/* sections */
+.sec{padding-block:clamp(3.5rem,8vw,7rem);border-bottom:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,26rem);gap:1rem 3rem;align-items:end;margin-bottom:clamp(2rem,5vw,3.5rem)}
+.eyebrow{margin:0 0 1rem;font:500 .72rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--tungsten)}
+h2{margin:0;font:800 clamp(2rem,5.4vw,3.75rem)/1 var(--display);font-variation-settings:"wdth" 112;text-transform:uppercase;text-wrap:balance}
+.sec-head p{margin:0;color:var(--dim)}
+
+/* work */
+.bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.75rem}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem}
+.f{display:inline-flex;align-items:center;gap:.55rem;padding:.7rem 1rem;border:1px solid var(--line-strong);background:transparent;color:var(--text);font:500 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.f span{color:var(--dim)}
+.f:hover{border-color:var(--text)}
+.f.is-on{background:var(--text);border-color:var(--text);color:var(--ink)}
+.f.is-on span{color:var(--ink)}
+.count{font:400 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:2.75rem 1.5rem}
+.work{display:flex;flex-direction:column;gap:1rem;min-width:0}
+.art{position:relative;aspect-ratio:16/10;max-width:100%;overflow:hidden;isolation:isolate;border:1px solid var(--line);background:var(--stage)}
+.art.v::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(to bottom,var(--ink) var(--bar),transparent var(--bar),transparent calc(100% - var(--bar)),var(--ink) calc(100% - var(--bar)))}
+.art .tc,.art .ar{position:absolute;top:.65rem;z-index:3;font:400 .66rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.85}
+.art .tc{left:.8rem}
+.art .ar{right:.8rem}
+.art .s{position:absolute;display:block;transition:transform .5s ease}
+.work:hover .art .s{transform:scale(1.04)}
+.a1{background:radial-gradient(55% 60% at 72% 48%,rgba(240,165,43,.5),transparent 62%),linear-gradient(180deg,#101c2d,#070a0f)}
+.a1 .s{left:12%;right:30%;top:44%;height:12%;background:repeating-linear-gradient(90deg,rgba(255,214,130,.9) 0 16%,transparent 16% 22%);box-shadow:0 0 40px rgba(240,165,43,.5)}
+.a2{background:linear-gradient(115deg,transparent 38%,rgba(236,233,225,.2) 47%,transparent 56%),radial-gradient(70% 90% at 30% 60%,#17454c 0%,#08141a 60%,#05090b 100%)}
+.a2 .s{right:10%;top:50%;width:44%;aspect-ratio:1;margin-top:-22%;border-radius:50%;border:1px solid rgba(236,233,225,.45);box-shadow:inset 0 0 0 18px rgba(236,233,225,.04),0 0 80px rgba(70,170,180,.25)}
+.a3{background:radial-gradient(rgba(236,233,225,.4) 1px,transparent 1.6px) 0 0/16px 16px,linear-gradient(180deg,#171a20,#0a0b0e)}
+.a3 .s{inset:0;background:radial-gradient(60% 70% at 50% 50%,transparent 25%,var(--ink) 100%)}
+.a3 .lit{position:absolute;left:46%;top:43%;width:8%;height:12%;background:var(--tungsten);box-shadow:0 0 34px rgba(240,165,43,.65)}
+.a4,.a5,.a6{background:radial-gradient(60% 80% at 50% 50%,rgba(240,165,43,.1),transparent 70%),var(--stage)}
+.phone{position:absolute;left:50%;top:50%;height:var(--h);aspect-ratio:var(--r);transform:translate(-50%,-50%);overflow:hidden;border:1px solid var(--line-strong);transition:transform .5s ease}
+.work:hover .phone{transform:translate(-50%,-50%) scale(1.04)}
+.phone::after{content:"";position:absolute;left:10%;right:10%;bottom:7%;height:2px;background:linear-gradient(90deg,var(--text) 0 40%,rgba(236,233,225,.3) 40%)}
+.p4{background:linear-gradient(165deg,#f0a52b 0%,#b8431b 55%,#240d08 100%)}
+.p5{background:linear-gradient(180deg,#0d2a2e,#050d12)}
+.p5 b{position:absolute;top:16%;right:16%;width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f4efe0,#bdb7a4);box-shadow:0 0 30px rgba(244,239,224,.35)}
+.p6{background:#14161b}
+.p6 b,.p6 i{position:absolute;top:19%;width:62%;aspect-ratio:1;border-radius:50%;border:2px solid}
+.p6 b{left:8%;border-color:var(--tungsten)}
+.p6 i{right:8%;border-color:var(--text)}
+.work h3{margin:0;font:700 1.35rem/1.1 var(--display);font-variation-settings:"wdth" 108;text-transform:uppercase;transition:font-variation-settings .35s ease}
+.work:hover h3{font-variation-settings:"wdth" 120}
+.meta{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin-top:-.35rem;font:400 .7rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.work p{margin:0;color:var(--dim);font-size:.95rem}
+
+/* services */
+.svc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:3rem 4rem}
+.svc article{min-width:0;padding-top:1.25rem;border-top:2px solid var(--text)}
+.svc h3{margin:0 0 .7rem;font:800 1.9rem/1 var(--display);font-variation-settings:"wdth" 112;text-transform:uppercase}
+.svc article>p{max-width:44ch;margin:0 0 1.5rem;color:var(--dim)}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.85rem 0;border-top:1px solid var(--line)}
+.rows li span:last-child{font:400 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:right}
+.formats{margin-top:clamp(2.5rem,6vw,4rem);padding-top:1.5rem;border-top:1px solid var(--line)}
+.ratios{display:flex;flex-wrap:wrap;align-items:flex-end;gap:1.75rem 2.25rem;margin:1.25rem 0 0;padding:0;list-style:none}
+.ratios li{display:flex;flex-direction:column;gap:.55rem;min-width:0}
+.ratios .r{display:block;width:var(--w);height:44px;border:1px solid var(--line-strong);background:var(--panel)}
+.ratios b{font:500 .78rem/1 var(--mono);letter-spacing:.08em}
+.ratios em{font:400 .68rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-style:normal}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-strong)}
+.step{display:grid;grid-template-columns:3.5rem minmax(0,1.1fr) minmax(0,1.7fr) 7rem;gap:.5rem 2rem;align-items:baseline;padding:1.6rem 0;border-bottom:1px solid var(--line)}
+.step .n{font:500 .8rem/1 var(--mono);color:var(--tungsten)}
+.step h3{margin:0;font:700 1.5rem/1.1 var(--display);font-variation-settings:"wdth" 108;text-transform:uppercase}
+.step p{margin:0;color:var(--dim)}
+.step .when{font:400 .72rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-align:right}
+
+/* contact */
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:3rem 5rem;align-items:start}
+.contact-grid .lede{margin:1.25rem 0 0;max-width:34ch;color:var(--dim)}
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:2rem;padding:1rem 1.1rem;border:1px solid var(--line);background:var(--stage)}
+.mail .lbl{font:400 .68rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.mail .addr{font:500 .95rem/1.2 var(--mono);overflow-wrap:anywhere;user-select:all}
+.mini{padding:.55rem .8rem;border:1px solid var(--line-strong);background:transparent;color:var(--text);font:500 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.mini:hover{border-color:var(--text)}
+.fine{margin:.7rem 0 0;font:400 .72rem/1.5 var(--mono);color:var(--dim)}
+form,.done{min-width:0;padding:clamp(1.25rem,3vw,2rem);border:1px solid var(--line);background:var(--stage)}
+.field{display:flex;flex-direction:column;gap:.45rem;margin:0 0 1.1rem;padding:0;border:0;min-width:0}
+.field label,.field legend{padding:0;font:500 .68rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.field input[type=text],.field input[type=email],.field select,.field textarea{width:100%;padding:.85rem 1rem;border:1px solid var(--line-strong);border-radius:0;background:var(--ink);color:var(--text);font:400 1rem/1.4 var(--body)}
+.field textarea{min-height:8rem;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--tungsten);outline-offset:1px;border-color:var(--tungsten)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:0 1rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.15rem}
+.chip{position:relative}
+.chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chip span{display:block;padding:.75rem 1rem;border:1px solid var(--line-strong);font:500 .74rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.chip input:checked+span{background:var(--text);border-color:var(--text);color:var(--ink)}
+.chip input:focus-visible+span{outline:2px solid var(--tungsten);outline-offset:2px}
+.err{min-height:1.3em;margin:0 0 .8rem;font-size:.9rem;color:var(--alert)}
+.done h3{margin:0 0 .7rem;font:800 1.7rem/1 var(--display);font-variation-settings:"wdth" 112;text-transform:uppercase}
+.done p{margin:0 0 1.1rem;color:var(--dim)}
+.done textarea{width:100%;min-height:11rem;margin-bottom:1rem;padding:.85rem 1rem;border:1px solid var(--line-strong);border-radius:0;background:var(--ink);color:var(--text);font:400 .85rem/1.55 var(--mono);resize:vertical}
+
+/* footer */
+.foot{padding-block:2rem 3rem}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem 2rem}
+.foot p{margin:0;font:400 .72rem/1.5 var(--mono);letter-spacing:.06em;color:var(--dim)}
+
+@media (max-width:820px){
+  .sec-head,.contact-grid{grid-template-columns:minmax(0,1fr)}
+  .step{grid-template-columns:2.5rem minmax(0,1fr)}
+  .step p,.step .when{grid-column:2}
+  .step .when{text-align:left;color:var(--dim)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Blind Spot, back to top">Blind Spot<i></i></a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="wrap">
+      <div class="vf-bar">
+        <span class="rec"><i></i>REC <b id="tc">00:00:07:12</b></span>
+        <span>24 fps &middot; 2.39:1 &middot; Video and social production</span>
+      </div>
+      <h1 id="hero-title"><span>We shoot</span><span>your blind</span><span>spot<i class="dot"></i></span></h1>
+      <div class="hero-foot">
+        <div class="hero-copy">
+          <p>Blind Spot is a video and social production studio. We look for what your audience keeps overlooking about you, then put it on screen.</p>
+          <div class="btns">
+            <a class="btn primary" href="#contact">Start a project</a>
+            <a class="btn" href="#work">See the work</a>
+          </div>
+        </div>
+        <figure class="test">
+          <div class="test-stage" aria-hidden="true"><span class="plus">+</span><span class="spot"></span></div>
+          <figcaption><b>Blind spot test</b>Cover your right eye. Look at the +. Move closer or further until the dot disappears.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Work</p>
+          <h2 id="work-title">Selected work</h2>
+        </div>
+        <p>Sample projects for invented clients. Each frame is drawn at the aspect ratio it was delivered in.</p>
+      </div>
+
+      <div class="bar">
+        <div class="filters" role="group" aria-label="Filter work">
+          <button class="f is-on" type="button" data-f="all" aria-pressed="true">All <span>6</span></button>
+          <button class="f" type="button" data-f="video" aria-pressed="false">Video <span>3</span></button>
+          <button class="f" type="button" data-f="social" aria-pressed="false">Social <span>3</span></button>
+        </div>
+        <span class="count" id="count" aria-live="polite">Showing 6 of 6</span>
+      </div>
+
+      <div class="grid">
+        <article class="work" data-kind="video">
+          <div class="art a1 v" style="--bar:16.5%" aria-hidden="true">
+            <span class="tc">00:01:48:00</span><span class="ar">2.39:1</span>
+            <i class="s"></i>
+          </div>
+          <h3>Night Shift</h3>
+          <div class="meta"><span>Kharta Coffee</span><span>Brand film</span><span>1:48</span></div>
+          <p>A roastery that never closes, told from the window seat of the last bus home.</p>
+        </article>
+
+        <article class="work" data-kind="video">
+          <div class="art a2 v" style="--bar:5%" aria-hidden="true">
+            <span class="tc">00:00:45:00</span><span class="ar">16:9</span>
+            <i class="s"></i>
+          </div>
+          <h3>Second Skin</h3>
+          <div class="meta"><span>Orbit Footwear</span><span>Commercial</span><span>0:45</span></div>
+          <p>Forty-five seconds, one continuous take, and a runner who never looks at the camera.</p>
+        </article>
+
+        <article class="work" data-kind="video">
+          <div class="art a3 v" style="--bar:5%" aria-hidden="true">
+            <span class="tc">00:06:20:00</span><span class="ar">16:9</span>
+            <i class="s"></i><b class="lit"></b>
+          </div>
+          <h3>The Quiet Floor</h3>
+          <div class="meta"><span>Almaza Exchange</span><span>Documentary short</span><span>6:20</span></div>
+          <p>The last hour on a trading floor, filmed after every screen but one has gone dark.</p>
+        </article>
+
+        <article class="work" data-kind="social">
+          <div class="art a4" aria-hidden="true">
+            <span class="tc">Ep 01&ndash;12</span><span class="ar">9:16</span>
+            <div class="phone p4" style="--r:9/16;--h:80%"></div>
+          </div>
+          <h3>Thumb Stop</h3>
+          <div class="meta"><span>Fold Kitchen</span><span>Reels series</span><span>12 episodes</span></div>
+          <p>Twelve twenty-second recipes, each one cut so the first frame is the finished dish.</p>
+        </article>
+
+        <article class="work" data-kind="social">
+          <div class="art a5" aria-hidden="true">
+            <span class="tc">Post 01&ndash;24</span><span class="ar">4:5</span>
+            <div class="phone p5" style="--r:4/5;--h:72%"><b></b></div>
+          </div>
+          <h3>After Hours Diaries</h3>
+          <div class="meta"><span>Sable Hotels</span><span>Feed series</span><span>24 posts</span></div>
+          <p>Night staff, empty lobbies and room service at 3 a.m., posted as a weekly diary.</p>
+        </article>
+
+        <article class="work" data-kind="social">
+          <div class="art a6" aria-hidden="true">
+            <span class="tc">Loop 01&ndash;08</span><span class="ar">1:1</span>
+            <div class="phone p6" style="--r:1/1;--h:66%"><b></b><i></i></div>
+          </div>
+          <h3>Loop Year</h3>
+          <div class="meta"><span>Pulse Mobile</span><span>Campaign cutdowns</span><span>8 loops</span></div>
+          <p>One launch film cut into eight seamless loops for every feed the campaign ran on.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services" aria-labelledby="svc-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Services</p>
+          <h2 id="svc-title">Two ways we work</h2>
+        </div>
+        <p>Most clients start with one film and keep us for the content that follows it.</p>
+      </div>
+
+      <div class="svc">
+        <article>
+          <h3>Video production</h3>
+          <p>Scripted, shot and finished by one team, from the first call to the last color pass.</p>
+          <ul class="rows">
+            <li><span>Brand films</span><span>1&ndash;3 min</span></li>
+            <li><span>Commercials</span><span>15&ndash;60 sec</span></li>
+            <li><span>Documentary shorts</span><span>5&ndash;15 min</span></li>
+            <li><span>Launch and event coverage</span><span>Cut within the week</span></li>
+          </ul>
+        </article>
+        <article>
+          <h3>Social content</h3>
+          <p>A steady run of short films built for the feed, with a producer who owns the calendar.</p>
+          <ul class="rows">
+            <li><span>Short-form series</span><span>6&ndash;24 episodes</span></li>
+            <li><span>Monthly content packages</span><span>12&ndash;30 posts</span></li>
+            <li><span>Cutdowns and captions</span><span>Every platform</span></li>
+            <li><span>Creator and UGC direction</span><span>Briefed shoots</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="formats">
+        <p class="eyebrow" style="margin:0">Formats we deliver</p>
+        <ul class="ratios">
+          <li><span class="r" style="--w:105px"></span><b>2.39:1</b><em>Cinema</em></li>
+          <li><span class="r" style="--w:78px"></span><b>16:9</b><em>Web and YouTube</em></li>
+          <li><span class="r" style="--w:44px"></span><b>1:1</b><em>Square</em></li>
+          <li><span class="r" style="--w:35px"></span><b>4:5</b><em>Feed</em></li>
+          <li><span class="r" style="--w:25px"></span><b>9:16</b><em>Reels, TikTok, Shorts</em></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="process" aria-labelledby="proc-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Process</p>
+          <h2 id="proc-title">Six weeks, start to release</h2>
+        </div>
+        <p>A typical brand film. Social packages run on a monthly cycle with the same five steps.</p>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="n">01</span>
+          <h3>Find the blind spot</h3>
+          <p>We read your channels, your competitors and your audience comments to find what people overlook about you. You get a one-page brief.</p>
+          <span class="when">Week 1</span>
+        </li>
+        <li class="step">
+          <span class="n">02</span>
+          <h3>Write the shots</h3>
+          <p>Script, storyboard and shot list. Locations, cast and schedule are locked before anyone picks up a camera.</p>
+          <span class="when">Week 2</span>
+        </li>
+        <li class="step">
+          <span class="n">03</span>
+          <h3>Shoot</h3>
+          <p>One to five shoot days with a small crew and a producer who stays on set.</p>
+          <span class="when">Weeks 3&ndash;4</span>
+        </li>
+        <li class="step">
+          <span class="n">04</span>
+          <h3>Cut</h3>
+          <p>Edit, color and sound. Two review rounds are included.</p>
+          <span class="when">Weeks 4&ndash;6</span>
+        </li>
+        <li class="step">
+          <span class="n">05</span>
+          <h3>Release</h3>
+          <p>Master files plus cutdowns in every format, with captions, thumbnails and a posting plan.</p>
+          <span class="when">Week 6</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Tell us what you keep missing</h2>
+          <p class="lede">Send a short brief. A producer replies within two working days.</p>
+          <div class="mail">
+            <span class="lbl">Email</span>
+            <span class="addr" id="addr">hello@blindspot.example</span>
+            <button class="mini" id="copyAddr" type="button">Copy</button>
+          </div>
+          <p class="fine">Placeholder address. Blind Spot is a fictional studio.</p>
+        </div>
+
+        <div>
+          <form id="brief" novalidate>
+            <div class="two">
+              <div class="field">
+                <label for="f-name">Name</label>
+                <input id="f-name" type="text" autocomplete="name">
+              </div>
+              <div class="field">
+                <label for="f-email">Email</label>
+                <input id="f-email" type="email" autocomplete="email">
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-company">Company</label>
+              <input id="f-company" type="text" autocomplete="organization">
+            </div>
+            <fieldset class="field">
+              <legend>What do you need?</legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="need" value="Video production" checked><span>Video</span></label>
+                <label class="chip"><input type="radio" name="need" value="Social content"><span>Social</span></label>
+                <label class="chip"><input type="radio" name="need" value="Video and social"><span>Both</span></label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label for="f-when">Timeline</label>
+              <select id="f-when">
+                <option>As soon as possible</option>
+                <option selected>In the next 1&ndash;2 months</option>
+                <option>Later this year</option>
+                <option>Just exploring</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-msg">What should we know?</label>
+              <textarea id="f-msg" placeholder="What are you making, who is it for, and what do people keep missing about it?"></textarea>
+            </div>
+            <p class="err" id="formErr" role="alert"></p>
+            <button class="btn primary" type="submit">Prepare the brief</button>
+          </form>
+
+          <div class="done" id="done" hidden>
+            <h3 id="doneTitle" tabindex="-1">Brief ready</h3>
+            <p>This is a concept site, so nothing was sent. Copy the brief below to keep it.</p>
+            <textarea id="briefText" readonly aria-label="Your brief"></textarea>
+            <div class="btns" style="margin-top:0">
+              <button class="btn primary" id="copyBrief" type="button">Copy brief</button>
+              <button class="btn" id="editBrief" type="button">Edit brief</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Back to top">Blind Spot<i></i></a>
+    <p>Concept site for a fictional studio. All projects and clients are invented.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function pad(n) { n = String(n); return n.length < 2 ? '0' + n : n; }
+
+  /* viewfinder timecode, 24 fps */
+  var tc = document.getElementById('tc');
+  if (tc && !reduce) {
+    var origin = performance.now() - 7500, last = -1;
+    (function tick(t) {
+      var f = Math.floor((t - origin) / 1000 * 24);
+      if (f !== last) {
+        last = f;
+        var fr = f % 24, s = Math.floor(f / 24) % 60, m = Math.floor(f / 1440) % 60, h = Math.floor(f / 86400) % 100;
+        tc.textContent = pad(h) + ':' + pad(m) + ':' + pad(s) + ':' + pad(fr);
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  /* work filters */
+  var btns = [].slice.call(document.querySelectorAll('.f'));
+  var cards = [].slice.call(document.querySelectorAll('.work'));
+  var count = document.getElementById('count');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var kind = b.getAttribute('data-f'), shown = 0;
+      btns.forEach(function (x) {
+        var on = x === b;
+        x.classList.toggle('is-on', on);
+        x.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      cards.forEach(function (c) {
+        var show = kind === 'all' || c.getAttribute('data-kind') === kind;
+        c.hidden = !show;
+        if (show) shown++;
+      });
+      count.textContent = 'Showing ' + shown + ' of ' + cards.length;
+    });
+  });
+
+  /* copy helper with selection fallback */
+  function copyText(text, source, btn) {
+    var label = btn.textContent;
+    function flash(msg) { btn.textContent = msg; setTimeout(function () { btn.textContent = label; }, 1800); }
+    function fallback() {
+      try {
+        if (source && source.select) { source.focus(); source.select(); }
+        else if (source) {
+          var r = document.createRange(); r.selectNodeContents(source);
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        }
+      } catch (e) {}
+      flash('Selected, press copy');
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { flash('Copied'); }, fallback);
+      } else { fallback(); }
+    } catch (e) { fallback(); }
+  }
+
+  var addr = document.getElementById('addr');
+  document.getElementById('copyAddr').addEventListener('click', function () {
+    copyText(addr.textContent, addr, this);
+  });
+
+  /* brief form: builds the brief on the page, nothing is sent anywhere */
+  var form = document.getElementById('brief');
+  var done = document.getElementById('done');
+  var out = document.getElementById('briefText');
+  var err = document.getElementById('formErr');
+  var nameEl = document.getElementById('f-name');
+  var emailEl = document.getElementById('f-email');
+  var msgEl = document.getElementById('f-msg');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = nameEl.value.trim(), email = emailEl.value.trim(), msg = msgEl.value.trim();
+    if (!name) { err.textContent = 'Add your name so we know who to reply to.'; nameEl.focus(); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { err.textContent = 'Enter an email address we can reply to, like name@company.com.'; emailEl.focus(); return; }
+    if (!msg) { err.textContent = 'Tell us a little about the project so the brief has something in it.'; msgEl.focus(); return; }
+    err.textContent = '';
+    var needEl = form.querySelector('input[name="need"]:checked');
+    var company = document.getElementById('f-company').value.trim();
+    var when = document.getElementById('f-when');
+    out.value = [
+      'Brief for Blind Spot',
+      '',
+      'Name: ' + name,
+      'Email: ' + email,
+      'Company: ' + (company || 'Not given'),
+      'Needs: ' + (needEl ? needEl.value : 'Not given'),
+      'Timeline: ' + when.options[when.selectedIndex].text,
+      '',
+      msg
+    ].join('\n');
+    form.hidden = true;
+    done.hidden = false;
+    document.getElementById('doneTitle').focus();
+  });
+
+  document.getElementById('copyBrief').addEventListener('click', function () {
+    copyText(out.value, out, this);
+  });
+  document.getElementById('editBrief').addEventListener('click', function () {
+    done.hidden = true;
+    form.hidden = false;
+    nameEl.focus();
+  });
+})();
+</script>
+
+</body></html>
